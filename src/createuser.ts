@@ -16,7 +16,7 @@ import * as crypto from 'crypto';
  */
 
 const ddb = new DynamoDB.DocumentClient()
-const ses = new SES()
+// const ses = new SES()
 
 export const computeHash = (password: string, salt: crypto.BinaryLike, fn: any): any => {
   let keylen = 128;
@@ -60,7 +60,9 @@ export const generateSalt = (keylen: number, fn: any): any => {
 export const handler = async (event: any = {}): Promise<any> => {
 
   console.log("creating user...");
-  let response, salt, hashpassword, record;
+  let response, record;
+  let salt: string;
+  let hashpassword: string;
   let username: string;
   let rawpassword: string;
 
@@ -83,59 +85,61 @@ export const handler = async (event: any = {}): Promise<any> => {
     let data = JSON.parse(event.body);
     username = data.username;
     rawpassword = data.password;
-    salt = generateSalt(1024, function (err: string, buf: Buffer) {
+    generateSalt(1024, function (err: string, buf: Buffer) {
       if (err) throw err;
-      console.log(`${buf.length} bytes of random data: ${buf.toString('hex')}`
-      )
-    });
-    hashpassword = computeHash(rawpassword, salt.toString('base64'), function (err: string, hash: any) {
-      if (err) {
-        console.log('Error in hash: ' + err);
-      } else {
-        console.log(`generated hash as ${hash.toString} for userId ${username}`)
-      }
-    });
+      salt = buf.toString('base64');
+      console.log(`${buf.length} bytes of random data: ${buf.toString('hex')}`);
+      computeHash(rawpassword, salt, async function (err: string, hash: any) {
+        if (err) {
+          console.log('Error in hash: ' + err);
+        } else {
+          hashpassword = hash.toString
+          console.log(`generated hash as ${hashpassword} for userId ${username}`)
 
-    record = {
-      "username": username,
-      "hashrecord": {
-        "hash": hashpassword,
-        "salt": salt
-      }
-    };
+          record = {
+            "username": username,
+            "hashrecord": {
+              "hash": hashpassword,
+              "salt": salt
+            }
+          };
 
-    console.log("building record: " + record);
-    try {
-      console.log('Preparing to save data');
-      const params = {
-        TableName: 'user-table',
-        Item: record
-      }
+          console.log("building record: " + record);
+          try {
+            console.log('Preparing to save data');
+            const params = {
+              TableName: 'AuthTable',
+              Item: record
+            }
+            
+            const results = await ddb.put(params).promise();
       
-      const results = await ddb.put(params).promise();
+            if (!results) {
+              console.log('No results found')
+              response = {
+                headers: { 'Access-Control-Allow-Origin': '*' },
+                statusCode: 400,
+              }
+            } else {
+              console.log("results not 400 error")
+              response = {
+                'statusCode': 200,
+                'body': JSON.stringify(record)
+              }
+            }
+          } catch (err) {
+            response = {
+              headers: { 'Access-Control-Allow-Origin': '*' },
+              body: err,
+              statusCode: 500
+            }
+            console.log(err)
+            // return err
+          }
+          return response;  
 
-      if (!results) {
-        console.log('No results found')
-        response = {
-          headers: { 'Access-Control-Allow-Origin': '*' },
-          statusCode: 400,
         }
-      } else {
-        console.log("results not 400 error")
-        response = {
-          'statusCode': 200,
-          'body': JSON.stringify(record)
-        }
-      }
-    } catch (err) {
-      response = {
-        headers: { 'Access-Control-Allow-Origin': '*' },
-        body: err,
-        statusCode: 500
-      }
-      console.log(err)
-      // return err
-    }
-    return response;
+      });
+    });
   }
 }

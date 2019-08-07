@@ -16,7 +16,7 @@ import * as crypto from 'crypto';
  */
 
 const ddb = new DynamoDB.DocumentClient()
-const ses = new SES()
+// const ses = new SES()
 
 export const computeHash = (password: string, salt: crypto.BinaryLike, fn: any): any => {
   let keylen = 128;
@@ -89,7 +89,7 @@ export const handler = async (event: any = {}): Promise<any> => {
       if (err) throw err;
       salt = buf.toString('base64');
       console.log(`${buf.length} bytes of random data: ${buf.toString('hex')}`);
-      computeHash(rawpassword, salt, function (err: string, hash: any) {
+      computeHash(rawpassword, salt, async function (err: string, hash: any) {
         if (err) {
           console.log('Error in hash: ' + err);
         } else {
