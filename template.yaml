@@ -1,57 +1,72 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  builder-bootcamp-nodejs-starter-kit
+  lambda-nodejs-authentication-kit
 Globals:
   Function:
     Timeout: 3
 
 Resources:
 
-  GetLambdaFunction:
+  GetUserLambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./dist
-      Handler: get.handler
+      Handler: getuser.handler
       Runtime: nodejs8.10
       Events:
         GetData:
           Type: Api
           Properties:
-            Path: /data/{data}
+            Path: /user/{userId}
             Method: GET
       Policies:
         - DynamoDBReadPolicy:
-            TableName: 'data-table'
+            TableName: !Ref authTableName
 
-  PostLambdaFunction:
+  PostUserLambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./dist
-      Handler: post.handler
+      Handler: createuser.handler
       Runtime: nodejs8.10
       Events:
         PostData:
           Type: Api
           Properties:
-            Path: /data
+            Path: /user
             Method: POST
       Policies:
         - DynamoDBCrudPolicy:
-            TableName: 'data-table'
+            TableName: !Ref authTableName
 
-  DataTable:
+  ValidateUserLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./dist
+      Handler: createuser.handler
+      Runtime: nodejs8.10
+      Events:
+        PostData:
+          Type: Api
+          Properties:
+            Path: /user
+            Method: POST
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref authTableName
+
+  AuthTable:
     Type: AWS::DynamoDB::Table
     Properties:
       AttributeDefinitions:
         -
-          AttributeName: "data"
+          AttributeName: "userid"
           AttributeType: "S"
       KeySchema:
         -
-          AttributeName: "data"
+          AttributeName: "userid"
           KeyType: "HASH"
-      ProvisionedThroughput:
-        ReadCapacityUnits: "5"
+      ProvisionedThroughput:        ReadCapacityUnits: "5"
         WriteCapacityUnits: "5"
-      TableName: "data-table"
+      TableName: !Ref authTableName

@@ -1,25 +1,23 @@
 openapi: 3.0.0
 info:
-  title: URL Shortener API
-  description: shortens urls
-  version: 0.1.9
+  title: Create User API
+  description: Creates a New User
+  version: 1.0.0
 servers:
-  - url: /{shortURL}
-    description: Send Links to this URL to Return Shortened URL and Original URL as JSON (Returns Both to Give Batch Feedback)
-  - url: /expand
-    description: Send Short URL to this URL to Return Original URL as JSON
+  - url: /
+    description: Send JSON to this URL to create a new user
 paths:
-  /short:
+  /user:
     post:
-      summary: Returns a JSON Object with originalURL and shortURL.
-      description: Creates Short URL.
+      summary: Returns a JSON Object with UserID.
+      description: Creates a new User.
       requestBody:
-        description: The URL to be shortened
+        description: User Information to create
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Url"
+              $ref: "#/components/schemas/UserName"
             example:
               originalURL: google.com
         
@@ -33,8 +31,8 @@ paths:
               example:
                 statusCode: 200
                 # Parseable JSON
-                body: "{shortURL: localhost:3000/J1odjwD2,
-                      originalURL: google.com}"
+                body: "{userName: newUserName,
+                      userID: 8675309}"
         '406':    # status code
           description: Error in method
           content:
@@ -59,15 +57,15 @@ paths:
               example:
                 statusCode: 500
                 body: "Directly pass error from DDB SDK as JSON"
-  /{shortURL}:
+  /user/{userId}:
     get:
-      summary: Redirects user to the original URL
-      description: Retrieves original URL from DynamoDB and redirects to it
+      summary: Retrieves a user by UserID
+      description: Retrieves a UserName by UserID
       parameters:
-        - name: shortURL
+        - name: UserName
           in: path
           required: true
-          description: The shortened url key
+          description: the user's UserId
           content:
             '*/*':
               schema:
@@ -79,26 +77,29 @@ paths:
           content:
             application/json:
               schema: 
-                $ref: "#/components/schemas/redirect"
+                $ref: "#/components/schemas/result"
               example: 
                 statusCode: 301
-                headers: "{Location: http://google.com}"
+                headers: "{UserName: Bedtime4Bonzo}"
         '404':    # status code
-          description: Provided URL does not exist
+          description: Provided UserID does not exist
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/result"
               example: 
                 statusCode: 404
-                body: "URL Does Not Exist"
+                body: "UserID Does Not Exist"
 components:
   schemas:
-    Url:
+    UserName:
       required:
-        - originalURL
+        - UserName
+        - email
       properties:
-        originalURL:
+        UserName:
+          type: string
+        email:
           type: string
     result:
       required:
@@ -108,13 +109,4 @@ components:
         statusCode:
           type: integer
         body:
-          type: string
-    redirect:
-      required:
-        - statusCode
-        - headers
-      properties:
-        statusCode:
-          type: integer
-        headers:
           type: string

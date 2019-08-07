@@ -1,5 +1,4 @@
-# builder-bootcamp-nodejs-starter-kit
-
+# javascript-lamnbda-auth package
 ## Requirements
 
 * AWS CLI already configured with Administrator permission
@@ -9,12 +8,14 @@
 
 ## Initial setup & deployment
 
-**Prepare the infrastructure**
+**Prepare the infrastructure**ß
 
 1. Create an S3 bucket
 ```bash
-aws s3 mb s3://bootcamp-starter-kit-adamulvi
+aws s3 mb s3://lambda-auth-projectname
 ```
+/** in my case its 
+     aws s3 mb s3://lambda-auth-kyleesc **/
 
 2. Edit `infrastructure/deploy.sh` and set the Configuration options to match your environment
 

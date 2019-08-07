@@ -1,9 +1,9 @@
 {
-  "name": "builder-bootcamp-nodejs-starter-kit",
+  "name": "javascript-lambda-auth",
   "version": "1.0.0",
-  "description": "Lambda-based microservice starter kit",
+  "description": "Lambda-based authentication microservices",
   "main": "app.js",
-  "author": "A. Ulvi",
+  "author": "K. Scott",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
@@ -16,6 +16,20 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
-    "aws-sdk": "^2.452.0"
-  }
+    "aws-sdk": "^2.452.0",
+    "crypto": "^1.0.1",
+    "util": "^0.12.1"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aulvi/builder-bootcamp-nodejs-starter-kit.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aulvi/builder-bootcamp-nodejs-starter-kit/issues"
+  },
+  "homepage": "https://github.com/aulvi/builder-bootcamp-nodejs-starter-kit#readme"
 }
