@@ -61,12 +61,12 @@ Resources:
     Properties:
       AttributeDefinitions:
         -
-          AttributeName: "userid"
+          AttributeName: "username"
           AttributeType: "S"
       KeySchema:
         -
-          AttributeName: "userid"
-          KeyType: "HASH"
+          AttributeName: "username"
+          KeyType: "String"
       ProvisionedThroughput:        ReadCapacityUnits: "5"
         WriteCapacityUnits: "5"
       TableName: !Ref authTableName
