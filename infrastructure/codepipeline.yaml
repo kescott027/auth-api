@@ -3,7 +3,7 @@ Description: Template describing the Code Suite tools
 
 Parameters:
 
-  ArtifactBucketName:
+  ArtifactBucketName: lambda-auth-artifacts-kyleesc
     Type: String
     Description: Where this pipeline should store artifacts.
 
@@ -15,11 +15,11 @@ Parameters:
     Type: String
     Description: Arn referencing service-role CodeBuild will use.
 
-  CodeCommitRepositoryName:
+  CodeCommitRepositoryName: auth-authapi
     Type: String
     Description: Where this pipeline should get source from.
 
-  CodeCommitBranchName:
+  CodeCommitBranchName: master
     Type: String
     Description: Where this pipeline should get source from.
 

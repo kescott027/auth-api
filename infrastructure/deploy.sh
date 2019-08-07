@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 # Configuration
-CodeCommitRepoName=builder-bootcamp-nodejs-starter-kit
-StackName=bootcamp-starter-kit-infra
-BucketName=bootcamp-starter-kit-adamulvi
+CodeCommitRepoName=auth-authapi
+StackName=authapi-build-stack
+BucketName=lambda-auth-artifacts-kyleesc
 
 # Package and deploy
 aws cloudformation package \

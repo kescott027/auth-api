@@ -1,5 +1,5 @@
 import { DynamoDB } from 'aws-sdk'
-import { SES } from 'aws-sdk'
+// import { SES } from 'aws-sdk'
 import * as crypto from 'crypto';
 
 /**
@@ -60,7 +60,7 @@ export const generateSalt = (keylen: number, fn: any): any => {
 export const handler = async (event: any = {}): Promise<any> => {
 
   console.log("creating user...");
-  let response, hash, salt, hashpassword, record;
+  let response, salt, hashpassword, record;
   let username: string;
   let rawpassword: string;
 
@@ -85,15 +85,14 @@ export const handler = async (event: any = {}): Promise<any> => {
     rawpassword = data.password;
     salt = generateSalt(1024, function (err: string, buf: Buffer) {
       if (err) throw err;
-      console.log(`${buf.length} bytes of random data: ${buf.toString('hex')}`
-      )
-    });
-    hashpassword = computeHash(rawpassword, salt.toString('base64'), function (err: string, hash: any) {
-      if (err) {
-        console.log('Error in hash: ' + err);
-      } else {
-        console.log(`generated hash as ${hash.toString} for userId ${username}`)
-      }
+      console.log(`${buf.length} bytes of random data: ${buf.toString('hex')}`);
+      hashpassword = computeHash(rawpassword, salt.toString('base64'), function (err: string, hash: any) {
+        if (err) {
+          console.log('Error in hash: ' + err);
+        } else {
+          console.log(`generated hash as ${hash.toString} for userId ${username}`)
+        }
+      });
     });
 
     record = {
@@ -108,7 +107,7 @@ export const handler = async (event: any = {}): Promise<any> => {
     try {
       console.log('Preparing to save data');
       const params = {
-        TableName: 'user-table',
+        TableName: 'AuthTable',
         Item: record
       }
       
@@ -134,7 +133,7 @@ export const handler = async (event: any = {}): Promise<any> => {
         statusCode: 500
       }
       console.log(err)
-      return err
+      // return err
     }
     return response;
   }

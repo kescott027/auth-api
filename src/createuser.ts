@@ -1,5 +1,5 @@
 import { DynamoDB } from 'aws-sdk'
-import { SES } from 'aws-sdk'
+// import { SES } from 'aws-sdk'
 import * as crypto from 'crypto';
 
 /**
@@ -60,7 +60,7 @@ export const generateSalt = (keylen: number, fn: any): any => {
 export const handler = async (event: any = {}): Promise<any> => {
 
   console.log("creating user...");
-  let response, hash, salt, hashpassword, record;
+  let response, salt, hashpassword, record;
   let username: string;
   let rawpassword: string;
 
@@ -134,7 +134,7 @@ export const handler = async (event: any = {}): Promise<any> => {
         statusCode: 500
       }
       console.log(err)
-      return err
+      // return err
     }
     return response;
   }

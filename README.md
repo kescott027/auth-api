@@ -12,10 +12,10 @@
 
 1. Create an S3 bucket
 ```bash
-aws s3 mb s3://lambda-auth-projectname
+aws s3 mb s3://lambda-auth-artifacts-kyleesc
 ```
 /** in my case its 
-     aws s3 mb s3://lambda-auth-kyleesc **/
+     aws s3 mb s3://lambda-auth-artifacts-kyleesc **/
 
 2. Edit `infrastructure/deploy.sh` and set the Configuration options to match your environment
 
