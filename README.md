@@ -1,4 +1,4 @@
-# javascript-lamnbda-auth package
+# javascript-lambda-auth package
 ## Requirements
 
 * AWS CLI already configured with Administrator permission
